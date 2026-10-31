@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="referrer" content="no-referrer">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data: blob:; connect-src 'self' https://*.supabase.co wss://*.supabase.co; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'">
+  <meta name="theme-color" content="#f6f8f7">
+  <title>Family Vault — your documents, in one place</title>
+  <link rel="stylesheet" href="styles.css">
+  <script defer src="vendor/supabase.js"></script>
+  <script defer src="config.js"></script>
+  <script defer src="app.js"></script>
+</head>
+<body>
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <main id="auth-page" class="auth-shell">
+    <section class="intro-panel" aria-label="Welcome">
+      <div class="brand brand-light"><span class="brand-icon">✳</span><span>family<span class="brand-accent">vault</span></span></div>
+      <div class="intro-content">
+        <div class="eyebrow light-eyebrow"><span class="status-dot"></span> A LITTLE MORE PEACE OF MIND</div>
+        <h1>All your important<br>things, <em>close at hand.</em></h1>
+        <p>A calm, private place for the documents your family needs—whenever you need them.</p>
+        <div class="illustration" aria-hidden="true">
+          <div class="orbit orbit-one"></div><div class="orbit orbit-two"></div>
+          <div class="paper paper-back"><span></span><span></span><span></span></div>
+          <div class="paper paper-front"><div class="paper-symbol">✳</div><span></span><span></span><span></span></div>
+          <div class="lock-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="5" y="10" width="14" height="11" rx="3"/><path d="M8 10V7a4 4 0 1 1 8 0v3"/><path d="M12 14v3"/></svg></div>
+        </div>
+      </div>
+      <div class="intro-footer"><span>DESIGNED FOR YOUR FAMILY</span><span>✦</span><span>MADE FOR EVERYDAY LIFE</span></div>
+    </section>
+    <section class="auth-side">
+      <div class="auth-card">
+        <div class="mobile-brand brand"><span class="brand-icon">✳</span><span>family<span class="brand-accent">vault</span></span></div>
+        <div id="login-view">
+          <div class="section-tag"><span class="small-dot"></span> YOUR SPACE</div>
+          <h2>Welcome back.</h2>
+          <p class="subtitle">Sign in to find your documents, right where you left them.</p>
+          <div id="setup-notice" class="notice hidden">The vault is being set up. Sign-in will be available when setup is complete.</div>
+          <form id="login-form" novalidate>
+            <label for="email">Email address</label>
+            <input id="email" name="email" type="email" autocomplete="email" placeholder="you@example.com" required>
+            <label for="password">Password</label>
+            <div class="password-wrap"><input id="password" name="password" type="password" autocomplete="current-password" placeholder="Enter your password" required><button type="button" id="show-password" class="text-action">Show</button></div>
+            <div class="form-row"><span></span><button class="text-action" id="forgot-password" type="button">Forgot password?</button></div>
+            <button class="button button-dark full" id="sign-in" type="submit">Sign in <span>→</span></button>
+            <p id="auth-error" class="error-text" role="alert"></p>
+          </form>
+          <div class="private-note"><span class="note-icon">⌁</span><div><strong>Made for your family</strong><p>Each family member has their own private account.</p></div></div>
+        </div>
+        <div id="reset-view" class="hidden">
+          <div class="section-tag"><span class="small-dot"></span> ACCOUNT SECURITY</div>
+          <h2>Choose a password.</h2>
+          <p class="subtitle">Choose a strong password for your family vault account.</p>
+          <form id="reset-form"><label for="new-password">New password</label><input id="new-password" type="password" autocomplete="new-password" minlength="12" required><label for="confirm-password">Confirm password</label><input id="confirm-password" type="password" autocomplete="new-password" minlength="12" required><button class="button button-dark full" type="submit">Save password <span>→</span></button><p id="reset-error" class="error-text" role="alert"></p><button type="button" class="text-action" id="reset-sign-out">Sign out</button></form>
+        </div>
+        <div class="auth-bottom">A quiet little home for your important things. <span>✦</span></div>
+      </div>
+    </section>
+  </main>
+
+  <div id="app-page" class="app-shell hidden">
+    <aside class="sidebar">
+      <div class="brand"><span class="brand-icon">✳</span><span>family<span class="brand-accent">vault</span></span></div>
+      <div class="sidebar-label">YOUR SPACE</div>
+      <nav aria-label="Main navigation"><button class="nav-item active" id="nav-all"><span class="nav-symbol">▦</span> My documents</button><button class="nav-item hidden" id="nav-members"><span class="nav-symbol">♧</span> Family members</button></nav>
+      <div class="sidebar-bottom"><div class="privacy-card"><div class="privacy-symbol">✧</div><strong>Your space, your documents.</strong><p>Each account has its own documents.</p></div><button id="change-password" class="nav-item"><span class="nav-symbol">⌁</span> Change password</button><button id="sign-out" class="nav-item signout"><span class="nav-symbol">↪</span> Sign out</button></div>
+    </aside>
+    <main class="main-area">
+      <header class="topbar"><div><span class="breadcrumb">YOUR VAULT</span><span class="breadcrumb-sep"> / </span><span class="breadcrumb-current">My documents</span></div><button class="mobile-logout text-action" id="mobile-sign-out">Sign out</button><div id="user-badge" class="user-badge"><span class="avatar">F</span><span id="user-email"></span></div></header>
+      <nav class="mobile-nav" aria-label="Mobile navigation"><button id="mobile-nav-all" class="active" type="button">My documents</button><button id="mobile-nav-members" class="hidden" type="button">Family members</button><button id="mobile-change-password" type="button">Change password</button></nav>
+      <div class="content-wrap">
+        <section id="documents-panel"><div class="greeting"><div><div class="section-tag"><span class="small-dot"></span> YOUR PRIVATE SPACE</div><h2>Everything, in its place<span class="period">.</span></h2><p>Keep the important things close. Find them whenever you need them.</p></div><button id="open-upload" class="button button-dark"><span class="plus">＋</span> Add document</button></div>
+        <div id="access-warning" class="notice hidden">This account has not been added to the family vault yet. Please ask the vault owner to add it.</div>
+        <section class="overview"><div class="overview-copy"><div class="overview-icon">✳</div><div><div class="overview-label">YOUR COLLECTION</div><strong>Little things, safely kept.</strong><p>A home for the files that matter to you.</p></div></div><div class="overview-stat"><strong id="document-count">0</strong><span>DOCUMENTS</span></div><div class="overview-stat"><strong id="total-size">0 B</strong><span>STORED</span></div></section>
+        <div class="files-header"><div><h3>My documents</h3><p>Everything you’ve saved, in one place.</p></div><div class="controls"><label class="search-box"><span aria-hidden="true">⌕</span><span class="sr-only">Search documents</span><input id="search" type="search" placeholder="Search documents"></label><select id="filter" aria-label="Filter by category"><option value="all">All categories</option><option value="identity">Identity</option><option value="education">Education</option><option value="work">Work</option><option value="finance">Finance</option><option value="personal">Personal</option><option value="other">Other</option></select></div></div>
+        <div id="loading" class="list-state">Loading your documents…</div>
+        <div id="empty-state" class="empty-state hidden"><div class="empty-icon">▤</div><h4 id="empty-title">A little space, just for you.</h4><p id="empty-copy">Your documents will appear here. Add your first one to get started.</p><button id="empty-upload" class="button button-outline">＋ &nbsp; Add a document</button></div>
+        <div class="file-list" id="file-list" aria-live="polite"></div>
+        <div class="footnote"><span>✦</span> A little more organised, a lot more at ease.</div></section>
+        <section id="members-panel" class="hidden"><div class="greeting"><div><div class="section-tag"><span class="small-dot"></span> ADMINISTRATION</div><h2>Bring your family in<span class="period">.</span></h2><p>Create a private account for each person who will use the vault.</p></div></div><div class="member-card"><div class="member-card-copy"><div class="overview-icon">♧</div><h3>Create a family account</h3><p>Give your family member their email and temporary password privately. They’ll choose their own password when they first sign in.</p></div><form id="member-form"><label for="member-email">Email address</label><input id="member-email" type="email" placeholder="family@example.com" autocomplete="off" required><label for="member-password">Temporary password</label><input id="member-password" type="password" autocomplete="new-password" minlength="12" placeholder="At least 12 characters" required><p id="member-error" class="error-text" role="alert"></p><button type="submit" id="create-member" class="button button-dark">Create account <span>→</span></button></form></div><div class="footnote"><span>✦</span> Each family member signs in to their own private space.</div></section>
+      </div>
+    </main>
+  </div>
+
+  <dialog id="upload-dialog"><form id="upload-form" class="dialog-form"><div class="dialog-head"><div><div class="section-tag"><span class="small-dot"></span> YOUR COLLECTION</div><h2>Add a document</h2><p>Save something important to your private space.</p></div><button type="button" class="close-button" id="close-upload" aria-label="Close">×</button></div><label class="upload-zone" for="file"><span class="upload-icon">↑</span><strong id="selected-file">Choose a file</strong><span>PDFs, photos and other documents · up to 50 MB</span></label><input type="file" id="file" class="sr-only" required><label for="category">Category</label><select id="category"><option value="identity">Identity</option><option value="education">Education</option><option value="work">Work</option><option value="finance">Finance</option><option value="personal">Personal</option><option value="other" selected>Other</option></select><p id="upload-error" class="error-text" role="alert"></p><div class="dialog-actions"><button type="button" id="cancel-upload" class="button button-outline">Cancel</button><button id="upload-submit" type="submit" class="button button-dark">Save document</button></div></form></dialog>
+</body>
+</html>
